@@ -7,7 +7,9 @@
   "initial:after": {
     "./middleware/headers": {
       "params": {
-        "X-Powered-By": null
+        "X-Powered-By": null,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "X-Requested-With"
       }
     }
   },
