@@ -129,13 +129,14 @@ module.exports = function (Channel) {
         var chatUrl = $chatIframe.attr('src') || null;
 
         var source = /(twitch|dailymotion)\.(?:com|tv)\/(?:widgets\/live_embed_player\.swf\?channel=|(?:embed\/)?video\/)?([a-z0-9-_]+)/i.exec(videoUrl);
-        var sourceName = (source ? source[1] : null);
+        var sourceName = (source ? source[1].toLowerCase() : null);
         var sourceValue = (source ? source[2] : null);
 
         switch (sourceName) {
           case 'twitch':
-            videoUrl = 'http://www.twitch.tv/' + sourceValue.toLowerCase() + '/popout';
-            chatUrl = 'http://www.twitch.tv/' + sourceValue.toLowerCase() + '/chat';
+            sourceValue = sourceName.toLowerCase();
+            videoUrl = 'http://www.twitch.tv/' + sourceValue + '/popout';
+            chatUrl = 'http://www.twitch.tv/' + sourceValue + '/chat';
             break;
         }
 
