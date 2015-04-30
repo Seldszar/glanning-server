@@ -1,0 +1,41 @@
+{
+  "db": {
+    "url": "mongodb://localhost/glanning",
+    "name": "db",
+    "connector": "mongodb"
+  },
+  "twitch": {
+    "name": "twitch",
+    "connector": "rest",
+    "operations": [
+      {
+        "template": {
+          "method": "GET",
+          "url": "https://api.twitch.tv/kraken/streams/{channel}"
+        },
+        "functions": {
+          "status": [
+            "channel"
+          ]
+        }
+      }
+    ]
+  },
+  "dailymotion": {
+    "name": "dailymotion",
+    "connector": "rest",
+    "operations": [
+      {
+        "template": {
+          "method": "GET",
+          "url": "https://api.dailymotion.com/video/{videoId}?fields=audience,onair"
+        },
+        "functions": {
+          "status": [
+            "videoId"
+          ]
+        }
+      }
+    ]
+  }
+}

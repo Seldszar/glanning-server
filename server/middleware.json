@@ -1,0 +1,30 @@
+{
+  "initial:before": {
+  },
+  "initial": {
+    "compression": {}
+  },
+  "initial:after": {
+    "./middleware/headers": {
+      "params": {
+        "X-Powered-By": null
+      }
+    }
+  },
+  "session": {
+  },
+  "auth": {
+  },
+  "parse": {
+  },
+  "routes": {
+  },
+  "files": {
+  },
+  "final": {
+    "loopback#urlNotFound": {}
+  },
+  "final:after": {
+    "errorhandler": {}
+  }
+}

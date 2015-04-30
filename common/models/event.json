@@ -1,0 +1,46 @@
+{
+  "name": "Event",
+  "base": "PersistedModel",
+  "strict": true,
+  "idInjection": true,
+  "hidden": [
+    "createdAt",
+    "updatedAt",
+    "deletedAt",
+    "channelId"
+  ],
+  "mixins": {
+    "TimeStamp": true,
+    "SoftDelete": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "start": {
+      "type": "date",
+      "required": true
+    },
+    "end": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "channel": {
+      "type": "belongsTo",
+      "model": "Channel"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    }
+  ],
+  "methods": []
+}

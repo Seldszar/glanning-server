@@ -1,0 +1,36 @@
+{
+  "name": "glanning-server",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "pretest": "jshint ."
+  },
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "compression": "^1.4.3",
+    "dotenv": "^1.1.0",
+    "errorhandler": "^1.3.5",
+    "fs-plus": "^2.7.0",
+    "lodash": "^3.6.0",
+    "loopback": "^2.15.0",
+    "loopback-boot": "^2.6.5",
+    "loopback-component-oauth2": "^2.0.0-beta9",
+    "loopback-connector-mongodb": "^1.8.0",
+    "loopback-connector-rest": "^1.7.0",
+    "loopback-datasource-juggler": "^2.23.0",
+    "loopback-ds-timestamp-mixin": "^2.0.3",
+    "moment": "^2.10.2",
+    "node-schedule": "^0.2.6",
+    "q": "^1.2.0",
+    "request": "^2.55.0",
+    "serve-favicon": "^2.2.0",
+    "winston": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "loopback-explorer": "^1.7.2"
+  },
+  "devDependencies": {
+    "jshint": "^2.6.3"
+  }
+}

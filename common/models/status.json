@@ -1,0 +1,76 @@
+{
+  "name": "Status",
+  "base": "PersistedModel",
+  "strict": true,
+  "idInjection": true,
+  "hidden": [
+    "channelId",
+    "eventId",
+    "sourceId"
+  ],
+  "mixins": {
+    "TimeStamp": true
+  },
+  "properties": {
+    "online": {
+      "type": "boolean",
+      "required": true
+    },
+    "viewers": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "channel": {
+      "type": "belongsTo",
+      "model": "Channel"
+    },
+    "event": {
+      "type": "belongsTo",
+      "model": "Event"
+    },
+    "source": {
+      "type": "belongsTo",
+      "model": "Source"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "online"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__get__channel"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__get__event"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__get__source"
+    }
+  ],
+  "methods": []
+}
