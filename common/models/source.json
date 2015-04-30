@@ -1,0 +1,59 @@
+{
+  "name": "Source",
+  "base": "PersistedModel",
+  "strict": true,
+  "idInjection": true,
+  "hidden": [
+    "channelId",
+    "eventId"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "videoUrl": {
+      "type": "string",
+      "default": null
+    },
+    "chatUrl": {
+      "type": "string",
+      "default": null
+    },
+    "priority": {
+      "type": "integer",
+      "default": 0
+    }
+  },
+  "validations": [],
+  "relations": {
+    "channel": {
+      "type": "belongsTo",
+      "model": "Channel"
+    },
+    "events": {
+      "type": "hasMany",
+      "model": "Event"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "find"
+    }
+  ],
+  "methods": []
+}
