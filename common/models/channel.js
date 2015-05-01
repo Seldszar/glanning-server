@@ -134,7 +134,7 @@ module.exports = function (Channel) {
 
         switch (sourceName) {
           case 'twitch':
-            sourceValue = sourceName.toLowerCase();
+            sourceValue = sourceValue.toLowerCase();
             videoUrl = 'http://www.twitch.tv/' + sourceValue + '/popout';
             chatUrl = 'http://www.twitch.tv/' + sourceValue + '/chat';
             break;
