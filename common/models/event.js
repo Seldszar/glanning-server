@@ -10,7 +10,7 @@ module.exports = function (Event) {
       _.assign(ctx.query.where, {
         or: [
           { start: { between: [start.toDate(), end.toDate()] } },
-          { end: { between: [start.add(1, 'milliseconds').toDate(), end.add(1, 'milliseconds').toDate()] } }
+          { end: { between: [start.clone().add(1, 'milliseconds').toDate(), end.clone().add(1, 'milliseconds').toDate()] } }
         ]
       });
     }

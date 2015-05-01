@@ -181,66 +181,73 @@ module.exports = function (Channel) {
         var $ = cheerio.load(body);
 
         Q.all(_.map($('.programme-journee-live .header-programme-live'), function (schedule) {
-          var $s = $(schedule);
-          var text = $s.text().trim();
-          var result = /Le (.*?) sur (?:gaming live )?(.*)/i.exec(text);
+          return Q.Promise(function (resolve, reject, notify) {
+            var $s = $(schedule);
+            var text = $s.text().trim();
+            var result = /Le (.*?) sur (?:gaming live )?(.*)/i.exec(text);
 
-          if (!result) {
-            return reject(new Error('Unable to parse event date'));
-          }
+            if (!result) {
+              return reject(new Error('Unable to parse event date'));
+            }
 
-          return Q.all(_.map($s.next('ul.wrap-programme-live').find('li'), function (event) {
-            return Q.Promise(function (resolve, reject, notify) {
+            var scheduleDay = moment(result[1], 'DD MMM YYYY', 'fr');
+            var retrievedEvents = [];
+
+            _.map($s.next('ul.wrap-programme-live').find('li'), function (event) {
               var $e = $(event);
               var periodStr = $('.horaire', $e).text().trim();
-              var period = /([0-9]{2}:[0-9]{2}) - ([0-9]{2}:[0-9]{2})/.exec(periodStr);
+              var period = /([0-9]{2}):([0-9]{2}) - ([0-9]{2}):([0-9]{2})/.exec(periodStr);
 
               if (!period) {
                 return reject(new Error('Unable to parse event period'));
               }
 
               var eventName = $('.lib-programme', $e).text().trim();
-              var eventStart = moment(result[1] + ' ' + period[1], 'DD MMM YYYY HH:mm', 'fr');
-              var eventEnd = moment(result[1] + ' ' + period[2], 'DD MMM YYYY HH:mm', 'fr');
+              var eventStart = scheduleDay.clone().set({ hour: parseInt(period[1]), minute: parseInt(period[2]) });
+              var eventEnd = scheduleDay.clone().set({ hour: parseInt(period[3]), minute: parseInt(period[4]) });
 
               if (eventStart.isAfter(eventEnd)) {
                 eventEnd.add(1, 'days');
               }
 
-              var data = {
+              retrievedEvents.push({
                 name: eventName,
                 start: eventStart.toDate(),
                 end: eventEnd.toDate()
-              };
-
-              that.schedule({
-                where: {
-                  or: [
-                    { start: { between: [eventStart.toDate(), moment(eventEnd).subtract(1, 'milliseconds').toDate()] } },
-                    { end: { between: [moment(eventStart).add(1, 'milliseconds').toDate(), eventEnd.toDate()] } }
-                  ]
-                }
-              }, function (err, events) {
-                if (err) return reject(err);
-
-                var matchedEvent = _.find(events, { name: data.name, start: data.start, end: data.end });
-
-                _.each(_.reject(events, 'id', _.get(matchedEvent, 'id')), function (event) {
-                  event.updateAttribute('deletedAt', new Date(), function (err, event) {});
-                });
-
-                if (matchedEvent) {
-                  return resolve(matchedEvent);
-                }
-
-                that.schedule.create(data, function (err, event) {
-                  if (err) return reject(err);
-
-                  resolve(event);
-                });
               });
             });
-          }));
+
+            that.schedule({
+              where: {
+                start: { between: [scheduleDay.clone().startOf('day').toDate(), scheduleDay.clone().endOf('day').toDate()] }
+              }
+            }, function (err, events) {
+              if (err) return reject(err);
+
+              // Suppression des événements existants périmés
+              filteredEvents = _.filter(events, function (event) {
+                var exists = _.some(retrievedEvents, { name: event.name, start: event.start, end: event.end });
+
+                if (!exists) {
+                  event.updateAttribute('deletedAt', new Date(), function (err, event) {});
+                }
+
+                return exists;
+              });
+
+              _.each(retrievedEvents, function (event) {
+                var exists = _.some(filteredEvents, { name: event.name, start: event.start, end: event.end });
+
+                if (!exists) {
+                  that.schedule.create(event, function (err, event) {
+                    if (err) return reject(err);
+                  });
+                }
+              });
+
+              resolve();
+            });
+          });
         }))
         .finally(resolve);
       });
